@@ -163,7 +163,7 @@ async def schedule_message(group_id, context: CallbackContext):
     asyncio.create_task(repeat())
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token().build()
+    application = ApplicationBuilder().token(TOKEN).build()
 
     start_handler = CommandHandler('start', start)
     setup_handler = CommandHandler('setup', setup)
