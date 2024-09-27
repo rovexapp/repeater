@@ -2,6 +2,9 @@ import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes, CallbackContext
 from telegram.error import BadRequest
+import os
+
+TOKEN = os.getenv("BOT_TOKEN")  # استخدم المتغير البيئي BOT_TOKEN
 
 group_settings = {}
 
@@ -160,7 +163,7 @@ async def schedule_message(group_id, context: CallbackContext):
     asyncio.create_task(repeat())
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token("7113825724:AAFv_4WcJdd8eyqYDPv_zYJHEjm5nTCEUSc").build()
+    application = ApplicationBuilder().token().build()
 
     start_handler = CommandHandler('start', start)
     setup_handler = CommandHandler('setup', setup)
