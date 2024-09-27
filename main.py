@@ -4,7 +4,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, Cal
 from telegram.error import BadRequest
 import os
 
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("BOT_TOKEN")  # استخدم المتغير البيئي BOT_TOKEN
 application = ApplicationBuilder().token(TOKEN).build()
 
 group_settings = {}
@@ -38,12 +38,10 @@ async def button_click(update: Update, context: CallbackContext):
         await ask_for_message(query, context, group_mode=True)
     elif query.data == 'setup_in_private':
         await query.edit_message_text("سيتم تحويلك إلى البوت لإعداد الرسالة بشكل خاص.")
-        # إرسال رسالة للمستخدم في الخاص لبدء إعداد الرسالة
         await context.bot.send_message(
             chat_id=update.effective_user.id,
             text="يرجى إدخال الرسالة المراد تكرارها في القروب عبر المحادثة الخاصة."
         )
-        # تخزين معرف القروب لكي يتم تطبيق الإعدادات عليه بعد اكتمال الإعداد في الخاص
         context.user_data['group_id'] = query.message.chat.id
         context.user_data['step'] = 'waiting_for_message_in_private'
 
@@ -60,7 +58,6 @@ async def ask_for_message(update: Update, context: CallbackContext, group_mode=F
 async def handle_message(update: Update, context: CallbackContext):
     step = context.user_data.get('step')
 
-    # عند إعداد الرسالة في المحادثة الخاصة
     if step == 'waiting_for_message_in_private':
         group_id = context.user_data['group_id']
         group_settings[group_id] = {'message': update.message.text}
@@ -164,7 +161,6 @@ async def schedule_message(group_id, context: CallbackContext):
     asyncio.create_task(repeat())
 
 if __name__ == '__main__':
-
     start_handler = CommandHandler('start', start)
     setup_handler = CommandHandler('setup', setup)
     message_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
@@ -176,5 +172,4 @@ if __name__ == '__main__':
     application.add_handler(button_handler)
 
     application.run_polling()
-
 
